@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import './App.css';
-import ThreeViewer from './ThreeViewer';
+// import ThreeViewer from './ThreeViewer';
 import { Button, Select, Slider, Row, Col, Icon, Dropdown, Menu, Switch } from 'antd';
 import MenuButton from './MenuButton';
+import Viewer from './containers/Viewer';
+import ViewerControlPanel from './containers/ViewerControlPanel';
 
 const Option = Select.Option;
 const { SubMenu, Item } = Menu;
@@ -25,13 +27,14 @@ class App extends Component {
   }
 
   componentDidMount() {
-    this.props.emitter.addListener('viewerPrepared', this.handleViewerPrepared);
+    /* this.props.emitter.addListener('viewerPrepared', this.handleViewerPrepared);
     this.viewer = new ThreeViewer({
       root: this.threeRoot.current,
       canvas: this.canvas.current,
       emitter: this.props.emitter,
+      // store: this.
     });
-    this.viewer.initScene();
+    this.viewer.initScene(); */
   }
 
   componentWillUnmount() {
@@ -145,9 +148,19 @@ class App extends Component {
     this.viewer.toggleOrbitControls('on');
   }
 
-  toggleFrame = (key) => {
+  /* toggleFrame = (key) => {
     // control frame detector
     this.viewer.toggleStats(key);
+  } */
+  settingsHandler = (key) => {
+    switch (key) {
+      case 'value':
+        
+        break;
+    
+      default:
+        break;
+    }
   }
 
   render() {
@@ -178,21 +191,20 @@ class App extends Component {
 
     return (
       <div className="App">
-        <div ref={this.threeRoot}>
-          <canvas ref={this.canvas}></canvas>
-        </div>
-        <div className="Panel" onMouseOver={this.handleMouseOver} onMouseOut={this.handleMouseOut}>
+        <Viewer />
+        <ViewerControlPanel />
+        {/* <div className="Panel" onMouseOver={this.handleMouseOver} onMouseOut={this.handleMouseOut}>
           <Row gutter={16} type="flex" align="bottom">
             {select}
             {btns}
             <Col>
-              <MenuButton toggleFrame={this.toggleFrame}></MenuButton>
+              <MenuButton settingsHandler={this.settingsHandler}></MenuButton>
             </Col>
           </Row>
           <Row>
             {slider}
           </Row>
-        </div>
+        </div> */}
       </div>
     );
   }

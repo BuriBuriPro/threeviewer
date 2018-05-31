@@ -19,9 +19,8 @@ import {
     SkeletonHelper
 } from 'three';
 import OrbitControls from 'three-orbitcontrols';
-import GLTFLoader from 'three-gltf-loader';
-import FBXLoader from 'three-fbx-loader';
 import Stats from 'stats.js';
+import { ViewerInfos } from './actions';
 
 const DEG = Math.PI / 180;
 
@@ -39,8 +38,6 @@ class ThreeViewer {
         this.scene = new Scene();
         this.framer = null;
         this.orbitControls = new OrbitControls(this.camera);
-        this.loader = new GLTFLoader();
-        this.loaderOfFBX = new FBXLoader();
         this.stats = new Stats();
         this.state = {};
         this.statsEnabled = true;
@@ -53,31 +50,12 @@ class ThreeViewer {
         // listen resizing of window
         this.resizeListener = window.addEventListener('resize', this.adaptWindow);
         this.root.appendChild(this.stats.domElement);
+        
+        this.primaryLoadClipActions = props.primaryLoadClipActions;
+        this.viewerInfo = props.viewerInfo;
+        // console.log(this.viewerInfo(ViewerInfos.VIEWER_RENDER));
+        
         this.startRenderLoop();
-
-        // add light
-        const light = new DirectionalLight(0xFFFFFF, 1.5);
-        light.position.set(0, 140, 500);
-        this.scene.add(light);
-
-        /* const hemispehreLight = new HemisphereLight(0xFFFFFF, 0x444444);
-        this.scene.add(hemispehreLight); */
-
-        const ambientLight = new AmbientLight(0xFFFFFF);
-        this.scene.add(ambientLight);
-
-        // base matrix
-        const baseMatrix = new Mesh(new PlaneGeometry(100, 100, 20, 20), new MeshBasicMaterial({
-            color: new Color('skyblue'),
-            wireframe: true,
-        }));
-        baseMatrix.rotateX(90 * DEG);
-        this.scene.add(baseMatrix);
-
-        // more initialization
-        // add axes to help observation
-        const axes = new AxesHelper(10);
-        this.scene.add(axes);
     }
 
     render() {
@@ -98,8 +76,8 @@ class ThreeViewer {
         if (this.statsEnabled) {
             this.stats.begin();
         }
-        this.emitter.emit('viewerRendering');
         this.render();
+        this.renderAction();
         if (this.statsEnabled) {
             this.stats.end();
         }
@@ -110,10 +88,8 @@ class ThreeViewer {
         cancelAnimationFrame(this.framer);
     }
 
-    initScene() {
-        this.loader.load('./mae/scene.gltf', (gltf) => {
-            this.doneLoading(gltf);
-        }, (progress) => { }, (err) => { });
+    renderAction() {
+        
     }
 
     doneLoading(gltf) {
@@ -132,13 +108,13 @@ class ThreeViewer {
         let callback = () => {
             mixer.update(clock.getDelta());
         };
-        this.emitter.addListener('viewerRendering', callback);
+        // this.emitter.addListener('viewerRendering', callback);
         this.scene.add(model);
         this.state = { model, clips, mixer, clock, callback };
         // actions are managed by React Component to keep the only source of truth
-        this.emitter.emit('viewerPrepared', {
+        /* this.emitter.emit('viewerPrepared', {
             actions: actions,
-        });
+        }); */
     }
 
     toggleOrbitControls(key) {
@@ -160,6 +136,53 @@ class ThreeViewer {
                 this.stats.domElement.style.display = 'none';
                 break;
         }
+    }
+
+    init() {
+        // add light
+        const light = new DirectionalLight(0xFFFFFF, 1.5);
+        light.position.set(0, 140, 500);
+        this.scene.add(light);
+
+        /* const hemispehreLight = new HemisphereLight(0xFFFFFF, 0x444444);
+        this.scene.add(hemispehreLight); */
+
+        /* const ambientLight = new AmbientLight(0xFFFFFF);
+        this.scene.add(ambientLight); */
+
+        // base matrix
+        const baseMatrix = new Mesh(new PlaneGeometry(100, 100, 20, 20), new MeshBasicMaterial({
+            color: new Color('skyblue'),
+            wireframe: true,
+        }));
+        baseMatrix.rotateX(90 * DEG);
+        this.scene.add(baseMatrix);
+
+        // more initialization
+        // add axes to help observation
+        const axes = new AxesHelper(10);
+        this.scene.add(axes);
+
+        this.startRenderLoop();
+    }
+
+    handleLoadedGLTF(gltf) {
+        let model = gltf.scene;
+        let clips, mixer, actions, clock;
+
+        // get animations
+        if (gltf.animations) {
+            clips = gltf.animations;
+            mixer = new AnimationMixer(model);
+            actions = clips.map(clip => mixer.clipAction(clip));
+            clock = new Clock();
+            this.renderAction = function() {
+              mixer.update(clock.getDelta());  
+            };
+            this.primaryLoadClipActions(actions);
+        }
+        // modify 
+        this.scene.add(model);
     }
 }
 
