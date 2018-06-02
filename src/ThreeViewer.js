@@ -48,6 +48,7 @@ class ThreeViewer {
         this.root.appendChild(this.stats.domElement);
         
         this.primaryLoadClipActions = props.primaryLoadClipActions;
+        this.viewerRender = props.viewerRender;
         this.startRenderLoop();
     }
 
@@ -147,7 +148,8 @@ class ThreeViewer {
             actions = clips.map(clip => mixer.clipAction(clip));
             clock = new Clock();
             this.renderAction = function() {
-              mixer.update(clock.getDelta());  
+                mixer.update(clock.getDelta());
+                this.viewerRender();
             };
             this.primaryLoadClipActions(actions);
         }

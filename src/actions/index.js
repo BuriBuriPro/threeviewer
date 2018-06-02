@@ -7,7 +7,8 @@ import {
     LOAD_GLTF_REQUEST,
     GET_CLIPACTIONS,
     SELECT_CLIPACTION,
-    CONTROL_CLIPACTION
+    CONTROL_CLIPACTION,
+    TOGGLE_ORBITCONTROL
 } from './actionTypes';
 
 // create a loader for loading GLLF Model
@@ -24,6 +25,13 @@ export function viewerRender() {
         type: VIEWER_RENDER,
         payload: new Date().getTime(),
     }
+}
+
+export function toggleOrbitControl(key) {
+    return {
+        type: TOGGLE_ORBITCONTROL,
+        payload: key,
+    };
 }
 
 export function requestLoadingGLTF(path) {

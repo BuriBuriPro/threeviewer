@@ -1,8 +1,8 @@
-import { INIT_VIEWER, VIEWER_RENDER } from '../actions/actionTypes';
+import { INIT_VIEWER, TOGGLE_ORBITCONTROL } from '../actions/actionTypes';
 
 export const viewer = (state = {
     inited: false,
-    renderTime: 0,
+    orbitCtrlEnabled: true,
 }, action) => {
     switch (action.type) {
         case INIT_VIEWER:
@@ -10,10 +10,14 @@ export const viewer = (state = {
                 ...state,
                 inited: true,
             };
-        case VIEWER_RENDER:
-            return {
-                ...state,
-                renderTime: action.renderTime,
+        case TOGGLE_ORBITCONTROL:
+            if (action.payload !== state.orbitCtrlEnabled) {
+                return {
+                    ...state,
+                    orbitCtrlEnabled: !state.orbitCtrlEnabled,
+                }
+            } else {
+                return state;
             }
         default:
             return state;

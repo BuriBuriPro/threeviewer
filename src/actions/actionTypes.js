@@ -11,3 +11,4 @@ export const ClipActionStatus = {
     STOP: 'STOP',
     PAUSE: 'PAUSE',
 };
+export const TOGGLE_ORBITCONTROL = 'TOGGLE_ORBITCONTROL';

@@ -75,10 +75,6 @@ class App extends Component {
     this.viewer.toggleOrbitControls('on');
   }
 
-  /* toggleFrame = (key) => {
-    // control frame detector
-    this.viewer.toggleStats(key);
-  } */
   settingsHandler = (key) => {
     switch (key) {
       case 'value':
@@ -91,47 +87,10 @@ class App extends Component {
   }
 
   render() {
-    /* let select, opts, btns, slider;
-
-    if (this.state.actions.length > 0) {
-      opts = this.state.actions.map((action) => {
-        let clip = action._clip;
-
-        return <Option key={clip.name}>{clip.name}</Option>
-      });
-      select = <Col span={4}>select animation<Select className="select" value={this.state.selectValue} onSelect={this.handleSelect}>{opts}</Select></Col>;
-      btns = this.state.btns.map((btn) => {
-        return (<Col key={btn} span={2}><Button className="btn" type="primary" onClick={() => { this.handleBtnClick(btn); }}>{btn}</Button></Col>);
-      });
-      if (this.currentAction) {
-        slider = <Col span={12}><Slider step={0.0001} min={0} max={this.state.actionStatus.duration} value={this.state.actionStatus.time} onChange={this.handleSliderChange} /></Col>;
-      }
-    }
-
-    const menu = (
-      <Menu onClick={this.handleMenuClick}>
-        <Item>
-          <Switch>frame</Switch>
-        </Item>
-      </Menu>
-    ); */
-
     return (
       <div className="App">
         <Viewer />
         <ViewerControlPanel />
-        {/* <div className="Panel" onMouseOver={this.handleMouseOver} onMouseOut={this.handleMouseOut}>
-          <Row gutter={16} type="flex" align="bottom">
-            {select}
-            {btns}
-            <Col>
-              <MenuButton settingsHandler={this.settingsHandler}></MenuButton>
-            </Col>
-          </Row>
-          <Row>
-            {slider}
-          </Row>
-        </div> */}
       </div>
     );
   }

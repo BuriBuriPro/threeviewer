@@ -14,7 +14,7 @@ export const currentClipAction = (state = {
             return {
                 ...state,
                 status: action.payload,
-            }
+            };
         default:
             return state;
     }
