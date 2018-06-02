@@ -33,7 +33,7 @@ class ThreeViewer {
         this.camera = new PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
         this.scene = new Scene();
         this.framer = null;
-        this.orbitControls = new OrbitControls(this.camera);
+        this.orbitControls = new OrbitControls(this.camera, this.canvas);
         this.stats = new Stats();
         this.state = {};
         this.statsEnabled = true;
@@ -87,20 +87,16 @@ class ThreeViewer {
     }
 
     toggleOrbitControls(key) {
-        if (key === 'on') {
-            this.orbitControls.enabled = true;
-        } else if (key === 'off') {
-            this.orbitControls.enabled = false;
-        }
+        this.orbitControls.enabled = key;
     }
 
     toggleStats(key) {
         switch (key) {
-            case 'on':
+            case true:
                 this.statsEnabled = true;
                 this.stats.domElement.style.display = '';
                 break;
-            case 'off':
+            case false:
                 this.statsEnabled = false;
                 this.stats.domElement.style.display = 'none';
                 break;

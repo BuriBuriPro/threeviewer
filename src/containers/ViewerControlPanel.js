@@ -3,7 +3,7 @@ import Panel from '../components/Panel';
 import { controlClipAction, toggleOrbitControl } from '../actions';
 
 const mapStateToProps = (state, ownProps) => ({
-    currentClipAction: {...state.currentClipAction},
+    currentClipAction: state.currentClipAction,
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({

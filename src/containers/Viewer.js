@@ -33,28 +33,39 @@ class Viewer extends Component {
     shouldComponentUpdate(nextProps) {
         // never update component directly, handle with core
         // if model is valid, load it in viewer
-        if (!this.props.model.gltf && !nextProps.model.isFetching && nextProps.model.gltf) {
-            this.core.handleLoadedGLTF(nextProps.model.gltf);
+        if (this.props.model !== nextProps.model) {
+            if (!nextProps.model.isFetching && nextProps.model.gltf) {
+                this.core.handleLoadedGLTF(nextProps.model.gltf);
+            }
         }
         // control action
-        if (this.props.currentClipAction && this.props.currentClipAction.status !== nextProps.currentClipAction.status) {
-            let action = this.props.clipActions.map[this.props.currentClipAction.id];
-
-            switch (nextProps.currentClipAction.status) {
-                case ClipActionStatus.PLAY:
-                    if (action.paused) {
-                        action.paused = false;
-                    }
-                    action.play();
-                    break;
-                case ClipActionStatus.PAUSE:
-                    action.paused = true;
-                    break;
-                case ClipActionStatus.STOP:
-                    action.stop();
-                    break;
-                default:
-                    break;
+        if (this.props.currentClipAction !== nextProps.currentClipAction) {
+            if (this.props.currentClipAction.status !== nextProps.currentClipAction.status) {
+                let action = this.props.clipActions.map[this.props.currentClipAction.id];
+    
+                switch (nextProps.currentClipAction.status) {
+                    case ClipActionStatus.PLAY:
+                        if (action.paused) {
+                            action.paused = false;
+                        }
+                        action.play();
+                        break;
+                    case ClipActionStatus.PAUSE:
+                        action.paused = true;
+                        break;
+                    case ClipActionStatus.STOP:
+                        action.stop();
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+        // config viewer
+        if (this.props.viewer !== nextProps.viewer) {
+            if (this.props.viewer.orbitCtrlEnabled !== nextProps.viewer.orbitCtrlEnabled) {
+                console.log(123);
+                this.core.toggleOrbitControls(nextProps.viewer.orbitCtrlEnabled);
             }
         }
         return false;
@@ -72,10 +83,10 @@ class Viewer extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => ({
-    model: {...state.model},
-    viewer: {...state.viewer},
-    clipActions: {...state.clipActions},
-    currentClipAction: {...state.currentClipAction},
+    model: state.model,
+    viewer: state.viewer,
+    clipActions: state.clipActions,
+    currentClipAction: state.currentClipAction,
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({

@@ -3,8 +3,8 @@ import Selector from '../components/Selector';
 import { selectClipAction, controlClipAction } from '../actions';
 
 const mapStateToProps = (state, ownProps) => ({
-    clipActions: {...state.clipActions},
-    currentClipAction: {...state.currentClipAction},
+    clipActions: state.clipActions,
+    currentClipAction: state.currentClipAction,
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({

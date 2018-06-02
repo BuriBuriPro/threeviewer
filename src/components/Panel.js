@@ -6,10 +6,6 @@ import { ClipActionStatus } from '../actions/actionTypes';
 import AnimationProgressSlider from '../containers/AnimationProgressSlider';
 
 class Panel extends Component {
-    handleMouseOver = () => {
-        // if (this.props.)
-    }
-
     render() {
         const currentClipAction = this.props.currentClipAction;
         const status = currentClipAction.status;
@@ -35,7 +31,7 @@ class Panel extends Component {
         stopBtn.onClick = () => this.props.onClick(stopBtn.feature);
 
         return (
-            <div onMouseOver={this.handleMouseOver}>
+            <div>
                 <Row gutter={12}>
                     <Col span={6}>
                         <AnimationSelector />
@@ -45,6 +41,9 @@ class Panel extends Component {
                     </Col>
                     <Col span={4}>
                         <Link {...stopBtn} />
+                    </Col>
+                    <Col span={4}>
+
                     </Col>
                 </Row>
                 <Row>
