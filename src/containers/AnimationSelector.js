@@ -1,11 +1,10 @@
-import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Selector from '../components/Selector';
 import { selectClipAction, controlClipAction } from '../actions';
 
 const mapStateToProps = (state, ownProps) => ({
-    clipActions: state.clipActions,
-    currentClipActionId: state.currentClipActionId,
+    clipActions: {...state.clipActions},
+    currentClipAction: {...state.currentClipAction},
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({

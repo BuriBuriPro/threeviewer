@@ -2,16 +2,13 @@ import React, { Component } from 'react';
 import { Row, Col } from 'antd';
 import AnimationSelector from '../containers/AnimationSelector';
 import Link from './Link';
-import { ClipActionStatus } from '../actions';
-import ProgressSlider from '../components/ProgressSlider';
+import { ClipActionStatus } from '../actions/actionTypes';
+import AnimationProgressSlider from '../containers/AnimationProgressSlider';
 
 class Panel extends Component {
-    constructor(props) {
-        super(props);
-    }
-
     render() {
-        const status = this.props.control.status;
+        const currentClipAction = this.props.currentClipAction;
+        const status = currentClipAction.status;
         const mainBtn = {};
         const stopBtn = {
             children: ClipActionStatus.STOP,
@@ -48,7 +45,7 @@ class Panel extends Component {
                 </Row>
                 <Row>
                     <Col span={12}>
-                        <ProgressSlider />
+                        <AnimationProgressSlider />
                     </Col>
                 </Row>
             </div>

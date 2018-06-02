@@ -3,12 +3,12 @@ import ThreeViewer from '../ThreeViewer';
 import { connect } from 'react-redux';
 import {
     loadGLTF,
-    viewerInfo,
     getClipActions,
     primaryLoadClipActions,
-    ClipActionStatus,
-    ViewerInfos
+    viewerRender,
+    initViewer
 } from '../actions';
+import { ClipActionStatus } from '../actions/actionTypes';
 
 class Viewer extends Component {
     constructor(props) {
@@ -23,10 +23,10 @@ class Viewer extends Component {
             canvas: this.canvas.current,
             root: this.root.current,
             primaryLoadClipActions: this.props.primaryLoadClipActions,
-            viewerInfo: this.props.viewerInfo,
+            viewerRender: this.props.viewerRender,
         });
         this.core.init();
-        this.props.viewerInfo(ViewerInfos.INIT_VIEWER);
+        this.props.initViewer();
         this.props.loadGLTF('./mae/scene.gltf');
     }
 
@@ -35,14 +35,16 @@ class Viewer extends Component {
         // if model is valid, load it in viewer
         if (!this.props.model.gltf && !nextProps.model.isFetching && nextProps.model.gltf) {
             this.core.handleLoadedGLTF(nextProps.model.gltf);
-            return true;
         }
-        if (this.props.clipActionControl.status !== nextProps.clipActionControl.status) {
-            let action = this.props.clipActions.map[this.props.currentClipActionId];
+        // control action
+        if (this.props.currentClipAction && this.props.currentClipAction.status !== nextProps.currentClipAction.status) {
+            let action = this.props.clipActions.map[this.props.currentClipAction.id];
 
-            switch (nextProps.clipActionControl.status) {
+            switch (nextProps.currentClipAction.status) {
                 case ClipActionStatus.PLAY:
-                    action.paused = false;
+                    if (action.paused) {
+                        action.paused = false;
+                    }
                     action.play();
                     break;
                 case ClipActionStatus.PAUSE:
@@ -51,15 +53,12 @@ class Viewer extends Component {
                 case ClipActionStatus.STOP:
                     action.stop();
                     break;
+                default:
+                    break;
             }
-            return true;
         }
         return false;
     }
-
-    /* componentWillUnmount() {
-
-    } */
 
     render() {
         return (
@@ -75,14 +74,14 @@ class Viewer extends Component {
 const mapStateToProps = (state, ownProps) => ({
     model: {...state.model},
     viewer: {...state.viewer},
-    clipActionControl: {...state.clipActionControl},
     clipActions: {...state.clipActions},
-    currentClipActionId: state.currentClipActionId,
+    currentClipAction: {...state.currentClipAction},
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
+    initViewer: () => dispatch(initViewer()),
+    viewerRender: () => dispatch(viewerRender()),
     loadGLTF: (path) => dispatch(loadGLTF(path)),
-    viewerInfo: (key) => dispatch(viewerInfo(key)),
     getClipActions: (actions) => dispatch(getClipActions(actions)),
     primaryLoadClipActions: (actions) => dispatch(primaryLoadClipActions(actions)),
 });

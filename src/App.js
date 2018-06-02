@@ -1,13 +1,7 @@
 import React, { Component } from 'react';
 import './App.css';
-// import ThreeViewer from './ThreeViewer';
-import { Button, Select, Slider, Row, Col, Icon, Dropdown, Menu, Switch } from 'antd';
-import MenuButton from './MenuButton';
 import Viewer from './containers/Viewer';
 import ViewerControlPanel from './containers/ViewerControlPanel';
-
-const Option = Select.Option;
-const { SubMenu, Item } = Menu;
 
 class App extends Component {
   constructor(props) {
@@ -48,73 +42,6 @@ class App extends Component {
     this.updateSelect(actions);
     // select first action as default
     this.handleSelect(actions[0]._clip.name);
-  }
-
-  updateSelect(actions) {
-    let acts = [...actions];
-
-    this.setState({
-      actions: acts
-    });
-  }
-
-  handleBtnClick = (key) => {
-    let btns = this.state.btns.slice(0);
-    let action = this.currentAction;
-
-    switch (key) {
-      case 'play':
-        btns[0] = 'pause';
-        action.paused = false;
-        action.play();
-        break;
-      case 'pause':
-        btns[0] = 'play';
-        action.paused = true;
-        break;
-      case 'stop':
-        action.stop();
-        if (btns[0] === 'pause') {
-          btns[0] = 'play';
-        }
-        break;
-    }
-    this.setState({
-      btns: btns,
-    });
-  }
-
-  handleSelect = (value) => {
-    let action = this.state.actions.find((act) => {
-      if (act._clip.name === value) {
-        return act;
-      }
-    });
-    let prevAction = this.currentAction;
-    let btns = this.state.btns.slice(0);
-
-    btns[0] = 'play';
-    // should not use state to maintain the value, when deep cloning action to update state, connection between animation and mixer will loose.
-    this.currentAction = action;
-    this.setState({
-      selectValue: value,
-      actionStatus: {
-        time: this.currentAction.time,
-        duration: this.currentAction._clip.duration,
-      },
-      btns: btns,
-    }, () => {
-      if (prevAction) {
-        prevAction.stop();
-      }
-      this.resetActionStatus();
-      this.props.emitter.addListener('viewerRendering', this.handleViewerRender);
-    });
-
-  }
-
-  resetActionStatus() {
-    this.props.emitter.removeListener('viewerRendering', this.handleViewerRender);
   }
 
   handleSliderChange = (value) => {
@@ -164,7 +91,7 @@ class App extends Component {
   }
 
   render() {
-    let select, opts, btns, slider;
+    /* let select, opts, btns, slider;
 
     if (this.state.actions.length > 0) {
       opts = this.state.actions.map((action) => {
@@ -187,7 +114,7 @@ class App extends Component {
           <Switch>frame</Switch>
         </Item>
       </Menu>
-    );
+    ); */
 
     return (
       <div className="App">

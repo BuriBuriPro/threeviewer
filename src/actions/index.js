@@ -1,21 +1,31 @@
-import THREE from 'three';
 import GLTFLoader from 'three-gltf-loader';
+import {
+    INIT_VIEWER,
+    VIEWER_RENDER,
+    LOAD_GLTF_FAILURE,
+    LOAD_GLTF_SUCCESS,
+    LOAD_GLTF_REQUEST,
+    GET_CLIPACTIONS,
+    SELECT_CLIPACTION,
+    CONTROL_CLIPACTION
+} from './actionTypes';
 
+// create a loader for loading GLLF Model
 const __GLTFLoader = new GLTFLoader();
 
-export const VIEWER_INFO = 'VIEWER_INFO';
-export const ViewerInfos = {
-    INIT_VIEWER: 'INIT_VIEWER',
-    VIEWER_RENDER: 'VIEWER_RENDER',
-};
-export function viewerInfo(key) {
+export function initViewer() {
     return {
-        type: VIEWER_INFO,
-        payload: key
+        type: INIT_VIEWER,
     };
 }
 
-export const LOAD_GLTF_REQUEST = 'LOAD_GLTF_REQUEST';
+export function viewerRender() {
+    return {
+        type: VIEWER_RENDER,
+        payload: new Date().getTime(),
+    }
+}
+
 export function requestLoadingGLTF(path) {
     return {
         type: LOAD_GLTF_REQUEST,
@@ -23,7 +33,6 @@ export function requestLoadingGLTF(path) {
     };
 }
 
-export const LOAD_GLTF_FAILURE = 'LOAD_GLTF_FAILURE';
 export function failLoadingGLTF(err) {
     return {
         type: LOAD_GLTF_FAILURE,
@@ -32,7 +41,6 @@ export function failLoadingGLTF(err) {
     };
 }
 
-export const LOAD_GLTF_SUCCESS = 'LOAD_GLTF_SUCCESS';
 export function succeedLoadingGLTF(gltf) {
     return {
         type: LOAD_GLTF_SUCCESS,
@@ -67,7 +75,6 @@ export function loadGLTF(path) {
     };
 }
 
-export const GET_CLIPACTIONS = 'GET_CLIPACTIONS';
 export function getClipActions(clipActions) {
     return {
         type: GET_CLIPACTIONS,
@@ -75,7 +82,6 @@ export function getClipActions(clipActions) {
     };
 }
 
-export const SELECT_CLIPACTION = 'SELECT_CLIPACTION';
 export function selectClipAction(id) {
     return {
         type: SELECT_CLIPACTION,
@@ -88,7 +94,6 @@ export function primaryLoadClipActions(clipActions) {
         dispatch(getClipActions(clipActions));
         // take first clipAction as default
         let firstClipAction = getState().clipActions.arr[0];
-
         if (firstClipAction) {
             // firstClipAction
             return dispatch(selectClipAction(firstClipAction._clip.uuid));
@@ -96,15 +101,9 @@ export function primaryLoadClipActions(clipActions) {
     }
 }
 
-export const ClipActionStatus = {
-    PLAY: 'PLAY',
-    STOP: 'STOP',
-    PAUSE: 'PAUSE',
-};
-export const CONTROL_CLIPACTION = 'CONTROL_CLIPACTION';
-export function controlClipAction(key) {
-    return {
-        type: CONTROL_CLIPACTION,
-        payload: key,
-    };
+export function controlClipAction(feature) {
+   return {
+       type: CONTROL_CLIPACTION,
+       payload: feature,
+   } 
 }

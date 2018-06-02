@@ -1,17 +1,13 @@
 import React, { Component } from 'react'
 import { Select } from 'antd';
-import { ClipActionStatus } from '../actions';
+import { ClipActionStatus } from '../actions/actionTypes';
 
 const { Option } = Select;
 
 class Selector extends Component {
-    constructor(props) {
-        super(props);
-    }
-
     handleSelect = id => {
-        if (this.props.currentClipActionId !== id) {
-            if (this.props.currentClipActionId) {
+        if (this.props.currentClipAction.id !== id) {
+            if (this.props.currentClipAction.id) {
                 this.props.controlClipAction(ClipActionStatus.STOP);
             }
             this.props.selectClipAction(id);
@@ -24,7 +20,7 @@ class Selector extends Component {
 
             return <Option key={clip.uuid}>{clip.name}</Option>
         });
-        const currentAction = this.props.clipActions.map[this.props.currentClipActionId];
+        const currentAction = this.props.clipActions.map[this.props.currentClipAction.id];
         const value = currentAction ? currentAction._clip.name : '';
 
         return (

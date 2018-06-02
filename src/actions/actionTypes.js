@@ -1,0 +1,13 @@
+export const INIT_VIEWER = 'INIT_VIEWER';
+export const VIEWER_RENDER = 'VIEWER_RENDER';
+export const LOAD_GLTF_REQUEST = 'LOAD_GLTF_REQUEST';
+export const LOAD_GLTF_FAILURE = 'LOAD_GLTF_FAILURE';
+export const LOAD_GLTF_SUCCESS = 'LOAD_GLTF_SUCCESS';
+export const GET_CLIPACTIONS = 'GET_CLIPACTIONS';
+export const SELECT_CLIPACTION = 'SELECT_CLIPACTION';
+export const CONTROL_CLIPACTION = 'CONTROL_CLIPACTION';
+export const ClipActionStatus = {
+    PLAY: 'PLAY',
+    STOP: 'STOP',
+    PAUSE: 'PAUSE',
+};

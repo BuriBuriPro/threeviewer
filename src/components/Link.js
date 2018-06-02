@@ -2,10 +2,6 @@ import React, { Component } from 'react'
 import { Button } from 'antd';
 
 class Link extends Component {
-    constructor(props) {
-        super(props);
-    }
-
     render() {
         return (
             <Button

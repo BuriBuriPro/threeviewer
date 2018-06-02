@@ -1,4 +1,3 @@
-// import * as THREE from 'three';
 import {
     WebGLRenderer,
     Scene,
@@ -11,16 +10,13 @@ import {
     DirectionalLight,
     AnimationMixer,
     Clock,
-    HemisphereLight,
-    AmbientLight,
-    BoxHelper,
-    Box3,
-    Object3D,
-    SkeletonHelper
+    // AmbientLight,
+    // HemisphereLight,
+    // BoxHelper,
+    // SkeletonHelper
 } from 'three';
 import OrbitControls from 'three-orbitcontrols';
 import Stats from 'stats.js';
-import { ViewerInfos } from './actions';
 
 const DEG = Math.PI / 180;
 
@@ -52,9 +48,6 @@ class ThreeViewer {
         this.root.appendChild(this.stats.domElement);
         
         this.primaryLoadClipActions = props.primaryLoadClipActions;
-        this.viewerInfo = props.viewerInfo;
-        // console.log(this.viewerInfo(ViewerInfos.VIEWER_RENDER));
-        
         this.startRenderLoop();
     }
 
@@ -92,31 +85,6 @@ class ThreeViewer {
         
     }
 
-    doneLoading(gltf) {
-        // clear previous state
-        if (this.state.callback) {
-            this.emitter.removeListener('viewerRendering', this.state.callback);
-            this.state = null;
-        }
-        let model = gltf.scene;
-        let clips = gltf.animations;
-        let mixer = new AnimationMixer(model);
-        let actions = clips.map((clip) => {
-            return mixer.clipAction(clip);
-        });
-        let clock = new Clock();
-        let callback = () => {
-            mixer.update(clock.getDelta());
-        };
-        // this.emitter.addListener('viewerRendering', callback);
-        this.scene.add(model);
-        this.state = { model, clips, mixer, clock, callback };
-        // actions are managed by React Component to keep the only source of truth
-        /* this.emitter.emit('viewerPrepared', {
-            actions: actions,
-        }); */
-    }
-
     toggleOrbitControls(key) {
         if (key === 'on') {
             this.orbitControls.enabled = true;
@@ -134,6 +102,8 @@ class ThreeViewer {
             case 'off':
                 this.statsEnabled = false;
                 this.stats.domElement.style.display = 'none';
+                break;
+            default:
                 break;
         }
     }
