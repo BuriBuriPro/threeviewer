@@ -3,19 +3,3 @@
   flex-direction: column;
   justify-content: center;
 }
-
-.Panel {
-  padding-left: 2vw;
-}
-
-.Panel .btn {
-  width: 100%;
-}
-
-.Panel .slider {
-  margin-top: 5vh;
-}
-
-.Panel .select {
-  width: 100%;
-}

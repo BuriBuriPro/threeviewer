@@ -3,8 +3,8 @@ import { Row, Col } from 'antd';
 import AnimationSelector from '../containers/AnimationSelector';
 import Link from './Link';
 import { ClipActionStatus } from '../actions/actionTypes';
-import AnimationProgressSlider from '../containers/AnimationProgressSlider';
 import DropMenu from './DropMenu';
+import AnimationProgressSlider from '../containers/AnimationProgressSlider';
 
 class Panel extends Component {
     render() {

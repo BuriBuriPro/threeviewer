@@ -10,11 +10,9 @@ import {
     DirectionalLight,
     AnimationMixer,
     Clock,
-    // AmbientLight,
-    // HemisphereLight,
-    // BoxHelper,
-    // SkeletonHelper
-} from 'three';
+    SkeletonHelper,
+    HemisphereLight
+} from 'three'; // AmbientLight, // HemisphereLight, // BoxHelper, // SkeletonHelper
 import OrbitControls from 'three-orbitcontrols';
 import Stats from 'stats.js';
 import { ClipActionStatus } from './actions/actionTypes';
@@ -35,6 +33,7 @@ class ThreeViewer {
         this.scene = new Scene();
         this.framer = null;
         this.orbitControls = new OrbitControls(this.camera, this.canvas);
+        this.orbitControls.enableKeys = false;
         this.stats = new Stats();
         this.state = {};
         this.statsEnabled = true;
@@ -50,6 +49,7 @@ class ThreeViewer {
 
         this.primaryLoadClipActions = props.primaryLoadClipActions;
         this.viewerRender = props.viewerRender;
+        this.clock = new Clock();
         this.startRenderLoop();
     }
 
@@ -67,12 +67,15 @@ class ThreeViewer {
     }
 
     startRenderLoop = () => {
+        let delta = this.clock.getDelta();
+
         this.stopRenderLoop();
         if (this.statsEnabled) {
             this.stats.begin();
         }
+        this.orbitControls.update(delta);
         this.render();
-        this.renderAction();
+        this.renderAction(delta);
         if (this.statsEnabled) {
             this.stats.end();
         }
@@ -119,12 +122,11 @@ class ThreeViewer {
 
     init() {
         // add light
-        const light = new DirectionalLight(0xFFFFFF, 1.5);
+        const light = new DirectionalLight(0xFFFFFF, 2.5);
         light.position.set(0, 140, 500);
-        this.scene.add(light);
 
-        /* const hemispehreLight = new HemisphereLight(0xFFFFFF, 0x444444);
-        this.scene.add(hemispehreLight); */
+        const hemispehreLight = new HemisphereLight(0xFFFFFF, 0x444444);
+        this.scene.add(hemispehreLight);
 
         /* const ambientLight = new AmbientLight(0xFFFFFF);
         this.scene.add(ambientLight); */
@@ -144,26 +146,29 @@ class ThreeViewer {
 
         this.axes = axes;
         this.baseMatrix = baseMatrix;
+        this.light = light;
 
         this.startRenderLoop();
     }
 
     handleLoadedGLTF(gltf) {
         let model = gltf.scene;
-        let clips, mixer, actions, clock;
+        let clips, mixer, actions, skeleton;
 
         // get animations
         if (gltf.animations) {
             clips = gltf.animations;
             mixer = new AnimationMixer(model);
             actions = clips.map(clip => mixer.clipAction(clip));
-            clock = new Clock();
-            this.renderAction = function () {
-                mixer.update(clock.getDelta());
+            this.renderAction = function (delta) {
+                mixer.update(delta);
                 this.viewerRender();
             };
             this.primaryLoadClipActions(actions);
         }
+        skeleton = new SkeletonHelper(model);
+        skeleton.visible = false;
+        this.scene.add(skeleton);
         // modify 
         this.scene.add(model);
     }
