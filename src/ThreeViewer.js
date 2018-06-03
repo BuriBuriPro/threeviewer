@@ -17,6 +17,7 @@ import {
 } from 'three';
 import OrbitControls from 'three-orbitcontrols';
 import Stats from 'stats.js';
+import { ClipActionStatus } from './actions/actionTypes';
 
 const DEG = Math.PI / 180;
 
@@ -46,7 +47,7 @@ class ThreeViewer {
         // listen resizing of window
         this.resizeListener = window.addEventListener('resize', this.adaptWindow);
         this.root.appendChild(this.stats.domElement);
-        
+
         this.primaryLoadClipActions = props.primaryLoadClipActions;
         this.viewerRender = props.viewerRender;
         this.startRenderLoop();
@@ -83,7 +84,7 @@ class ThreeViewer {
     }
 
     renderAction() {
-        
+
     }
 
     toggleOrbitControls(key) {
@@ -91,17 +92,28 @@ class ThreeViewer {
     }
 
     toggleStats(key) {
-        switch (key) {
-            case true:
-                this.statsEnabled = true;
-                this.stats.domElement.style.display = '';
-                break;
-            case false:
-                this.statsEnabled = false;
-                this.stats.domElement.style.display = 'none';
-                break;
-            default:
-                break;
+        if (key) {
+            this.statsEnabled = true;
+            this.stats.domElement.style.display = '';
+        } else {
+            this.statsEnabled = false;
+            this.stats.domElement.style.display = 'none';
+        }
+    }
+
+    toggleAxes(key) {
+        if (key) {
+            this.axes.visible = true;
+        } else {
+            this.axes.visible = false;
+        }
+    }
+
+    toggleBaseMatrix(key) {
+        if (key) {
+            this.baseMatrix.visible = true;
+        } else {
+            this.baseMatrix.visible = false;
         }
     }
 
@@ -130,6 +142,9 @@ class ThreeViewer {
         const axes = new AxesHelper(10);
         this.scene.add(axes);
 
+        this.axes = axes;
+        this.baseMatrix = baseMatrix;
+
         this.startRenderLoop();
     }
 
@@ -143,7 +158,7 @@ class ThreeViewer {
             mixer = new AnimationMixer(model);
             actions = clips.map(clip => mixer.clipAction(clip));
             clock = new Clock();
-            this.renderAction = function() {
+            this.renderAction = function () {
                 mixer.update(clock.getDelta());
                 this.viewerRender();
             };
@@ -151,6 +166,42 @@ class ThreeViewer {
         }
         // modify 
         this.scene.add(model);
+    }
+
+    updateConfig(prev, next) {
+        if (prev.orbitCtrlEnabled !== next.orbitCtrlEnabled) {
+            this.toggleOrbitControls(next.orbitCtrlEnabled);
+        }
+        if (prev.statsEnabled !== next.statsEnabled) {
+            this.toggleStats(next.statsEnabled);
+        }
+        if (prev.axesEnabled !== next.axesEnabled) {
+            this.toggleAxes(next.axesEnabled);
+        }
+        if (prev.baseMatrixEnabled !== next.baseMatrixEnabled) {
+            this.toggleBaseMatrix(next.baseMatrixEnabled);
+        }
+    }
+
+    controlAction(prev, next, action) {
+        if (prev.status !== next.status) {
+            switch (next.status) {
+                case ClipActionStatus.PLAY:
+                    if (action.paused) {
+                        action.paused = false;
+                    }
+                    action.play();
+                    break;
+                case ClipActionStatus.PAUSE:
+                    action.paused = true;
+                    break;
+                case ClipActionStatus.STOP:
+                    action.stop();
+                    break;
+                default:
+                    break;
+            }
+        }
     }
 }
 

@@ -8,7 +8,10 @@ import {
     GET_CLIPACTIONS,
     SELECT_CLIPACTION,
     CONTROL_CLIPACTION,
-    TOGGLE_ORBITCONTROL
+    TOGGLE_ORBITCONTROL,
+    TOGGLE_STATS,
+    TOGGLE_AXES,
+    TOGGLE_BASEMATRIX
 } from './actionTypes';
 
 // create a loader for loading GLLF Model
@@ -32,6 +35,27 @@ export function toggleOrbitControl(key) {
         type: TOGGLE_ORBITCONTROL,
         payload: key,
     };
+}
+
+export function togggleStats(key) {
+    return {
+        type: TOGGLE_STATS,
+        payload: key,
+    };
+}
+
+export function toggleAxes(key) {
+    return {
+        type: TOGGLE_AXES,
+        payload: key,
+    };
+}
+
+export function toggleBaseMatrix(key) {
+    return {
+        type: TOGGLE_BASEMATRIX,
+        payload: key,
+    }
 }
 
 export function requestLoadingGLTF(path) {

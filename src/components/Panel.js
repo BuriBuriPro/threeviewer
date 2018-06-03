@@ -4,6 +4,7 @@ import AnimationSelector from '../containers/AnimationSelector';
 import Link from './Link';
 import { ClipActionStatus } from '../actions/actionTypes';
 import AnimationProgressSlider from '../containers/AnimationProgressSlider';
+import DropMenu from './DropMenu';
 
 class Panel extends Component {
     render() {
@@ -43,7 +44,7 @@ class Panel extends Component {
                         <Link {...stopBtn} />
                     </Col>
                     <Col span={4}>
-
+                        <DropMenu />
                     </Col>
                 </Row>
                 <Row>

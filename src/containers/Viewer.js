@@ -8,7 +8,6 @@ import {
     viewerRender,
     initViewer
 } from '../actions';
-import { ClipActionStatus } from '../actions/actionTypes';
 
 class Viewer extends Component {
     constructor(props) {
@@ -40,33 +39,13 @@ class Viewer extends Component {
         }
         // control action
         if (this.props.currentClipAction !== nextProps.currentClipAction) {
-            if (this.props.currentClipAction.status !== nextProps.currentClipAction.status) {
-                let action = this.props.clipActions.map[this.props.currentClipAction.id];
-    
-                switch (nextProps.currentClipAction.status) {
-                    case ClipActionStatus.PLAY:
-                        if (action.paused) {
-                            action.paused = false;
-                        }
-                        action.play();
-                        break;
-                    case ClipActionStatus.PAUSE:
-                        action.paused = true;
-                        break;
-                    case ClipActionStatus.STOP:
-                        action.stop();
-                        break;
-                    default:
-                        break;
-                }
-            }
+            let action = this.props.clipActions.map[this.props.currentClipAction.id];
+
+            this.core.controlAction(this.props.currentClipAction, nextProps.currentClipAction, action);
         }
         // config viewer
         if (this.props.viewer !== nextProps.viewer) {
-            if (this.props.viewer.orbitCtrlEnabled !== nextProps.viewer.orbitCtrlEnabled) {
-                console.log(123);
-                this.core.toggleOrbitControls(nextProps.viewer.orbitCtrlEnabled);
-            }
+            this.core.updateConfig(this.props.viewer, nextProps.viewer);
         }
         return false;
     }
