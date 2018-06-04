@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Row, Col } from 'antd';
+import { Row, Col, Icon } from 'antd';
 import AnimationSelector from '../containers/AnimationSelector';
 import Link from './Link';
 import { ClipActionStatus } from '../actions/actionTypes';
@@ -12,15 +12,15 @@ class Panel extends Component {
         const status = currentClipAction.status;
         const mainBtn = {};
         const stopBtn = {
-            children: ClipActionStatus.STOP,
+            children: <Icon style={{width: '100%'}} type="close-square" />,
             feature: ClipActionStatus.STOP,
         };
 
         if (status === ClipActionStatus.PLAY) {
-            mainBtn.children = ClipActionStatus.PAUSE;
+            mainBtn.children = <Icon type="pause"></Icon>;
             mainBtn.feature = ClipActionStatus.PAUSE;
         } else {
-            mainBtn.children = ClipActionStatus.PLAY;
+            mainBtn.children = <Icon type="caret-right"></Icon>; 
             mainBtn.feature = ClipActionStatus.PLAY;
         }
         if (status === ClipActionStatus.STOP) {
@@ -32,24 +32,29 @@ class Panel extends Component {
         stopBtn.onClick = () => this.props.onClick(stopBtn.feature);
 
         return (
-            <div>
-                <Row gutter={12}>
-                    <Col span={6}>
-                        <AnimationSelector />
-                    </Col>
-                    <Col span={4}>
-                        <Link {...mainBtn} />
-                    </Col>
-                    <Col span={4}>
-                        <Link {...stopBtn} />
-                    </Col>
-                    <Col span={4}>
-                        <DropMenu />
+            <div style={
+                {
+                    width: '100%',
+                    padding: '8px',
+                }
+            }>
+                <Row>
+                    <Col span={24}>
+                        <AnimationProgressSlider />
                     </Col>
                 </Row>
-                <Row>
-                    <Col span={12}>
-                        <AnimationProgressSlider />
+                <Row gutter={16}>
+                    <Col span={2}>
+                        <Link {...mainBtn} />
+                    </Col>
+                    <Col span={2}>
+                        <Link {...stopBtn} />
+                    </Col>
+                    <Col span={3}>
+                        <AnimationSelector />
+                    </Col>
+                    <Col span={3}>
+                        <DropMenu />
                     </Col>
                 </Row>
             </div>
