@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import SettingsMenu from '../components/SettingsMenu';
-import { togggleStats, toggleAxes, toggleBaseMatrix } from '../actions';
+import { togggleStats, toggleAxes, togglegrid } from '../actions';
 
 const mapStateToProps = (state) => ({
     viewer: state.viewer,
@@ -9,7 +9,7 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
    toggleStats: (key) => dispatch(togggleStats(key)),
    toggleAxes: (key) => dispatch(toggleAxes(key)),
-   toggleBaseMatrix: (key) => dispatch(toggleBaseMatrix(key)),
+   togglegrid: (key) => dispatch(togglegrid(key)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(SettingsMenu);

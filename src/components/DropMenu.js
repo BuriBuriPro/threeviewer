@@ -29,6 +29,8 @@ class DropMenu extends Component {
                 <Button type="primary" style={
                     {
                         width: '100%',
+                        fontSize: '0.3em',
+                        textAlign: 'center',
                     }
                 }>
                     Settings

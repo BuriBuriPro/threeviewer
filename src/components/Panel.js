@@ -5,14 +5,19 @@ import Link from './Link';
 import { ClipActionStatus } from '../actions/actionTypes';
 import DropMenu from './DropMenu';
 import AnimationProgressSlider from '../containers/AnimationProgressSlider';
+import './PanelStyle.css';
 
 class Panel extends Component {
+    componentDidMount() {
+
+    }
+
     render() {
         const currentClipAction = this.props.currentClipAction;
         const status = currentClipAction.status;
         const mainBtn = {};
         const stopBtn = {
-            children: <Icon style={{width: '100%'}} type="close-square" />,
+            children: <Icon style={{ width: '100%' }} type="close-square" />,
             feature: ClipActionStatus.STOP,
         };
 
@@ -20,7 +25,7 @@ class Panel extends Component {
             mainBtn.children = <Icon type="pause"></Icon>;
             mainBtn.feature = ClipActionStatus.PAUSE;
         } else {
-            mainBtn.children = <Icon type="caret-right"></Icon>; 
+            mainBtn.children = <Icon type="caret-right"></Icon>;
             mainBtn.feature = ClipActionStatus.PLAY;
         }
         if (status === ClipActionStatus.STOP) {
@@ -36,6 +41,7 @@ class Panel extends Component {
                 {
                     width: '100%',
                     padding: '8px',
+                    overflow: 'hidden',
                 }
             }>
                 <Row>
@@ -43,18 +49,35 @@ class Panel extends Component {
                         <AnimationProgressSlider />
                     </Col>
                 </Row>
-                <Row gutter={16}>
-                    <Col span={2}>
+                <Row gutter={{
+                    xs: 0,
+                    sm: 8,
+                    md: 16,
+                    lg: 24,
+                }}
+                    type="flex"
+                    justify="space-around"
+                    align="middle"
+                >
+                    <Col className="panelCol" span={2}>
                         <Link {...mainBtn} />
                     </Col>
-                    <Col span={2}>
+                    <Col className="panelCol" span={2}>
                         <Link {...stopBtn} />
                     </Col>
-                    <Col span={3}>
+                    <Col className="panelCol" span={3}>
                         <AnimationSelector />
                     </Col>
-                    <Col span={3}>
+                    {/* <Col className="panelCol" span={3}>
                         <DropMenu />
+                    </Col> */}
+                    <Col className="panelCol" span={3}>
+                        <Link
+                            onClick={() => {
+                                console.log(!this.props.sider.visible);
+                                
+                                this.props.toggleSider(!this.props.sider.visible)}
+                            }>Inspector</Link>
                     </Col>
                 </Row>
             </div>

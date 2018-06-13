@@ -3,7 +3,7 @@ import {
     TOGGLE_ORBITCONTROL,
     TOGGLE_STATS,
     TOGGLE_AXES,
-    TOGGLE_BASEMATRIX
+    TOGGLE_GRID
 } from '../actions/actionTypes';
 
 export const viewer = (state = {
@@ -11,7 +11,7 @@ export const viewer = (state = {
     orbitCtrlEnabled: true,
     statsEnabled: true,
     axesEnabled: true,
-    baseMatrixEnabled: true,
+    gridEnabled: true,
 }, action) => {
     switch (action.type) {
         case INIT_VIEWER:
@@ -46,11 +46,11 @@ export const viewer = (state = {
             } else {
                 return state;
             }
-        case TOGGLE_BASEMATRIX:
-            if (action.payload !== state.baseMatrixEnabled) {
+        case TOGGLE_GRID:
+            if (action.payload !== state.gridEnabled) {
                 return {
                     ...state,
-                    baseMatrixEnabled: action.payload,
+                    gridEnabled: action.payload,
                 }
             } else {
                 return state;

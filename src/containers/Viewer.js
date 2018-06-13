@@ -47,6 +47,10 @@ class Viewer extends Component {
         if (this.props.viewer !== nextProps.viewer) {
             this.core.updateConfig(this.props.viewer, nextProps.viewer);
         }
+        // sider functions
+        if (this.props.sider !== nextProps.sider) {
+            this.core.inspectorControl(this.props.sider, nextProps.sider);
+        }
         return false;
     }
 
@@ -66,6 +70,7 @@ const mapStateToProps = (state, ownProps) => ({
     viewer: state.viewer,
     clipActions: state.clipActions,
     currentClipAction: state.currentClipAction,
+    sider: state.sider,
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({

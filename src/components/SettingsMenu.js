@@ -12,8 +12,8 @@ class SettingsMenu extends Component {
         this.props.toggleAxes(e);
     }
 
-    handleBaseMatrixChange = (e) => {
-        this.props.toggleBaseMatrix(e);
+    handlegridChange = (e) => {
+        this.props.togglegrid(e);
     }
 
     render() {
@@ -35,12 +35,12 @@ class SettingsMenu extends Component {
                         /> Axes
                     </div>
                 </Item>
-                <Item key="baseMatrixSwitch">
+                <Item key="gridSwitch">
                     <div>
                         <Switch 
-                            checked={this.props.viewer.baseMatrixEnabled}
-                            onChange={this.handleBaseMatrixChange}
-                        /> baseMatrix
+                            checked={this.props.viewer.gridEnabled}
+                            onChange={this.handlegridChange}
+                        /> grid
                     </div>
                 </Item>
             </Menu>

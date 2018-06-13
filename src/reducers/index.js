@@ -4,6 +4,7 @@ import { model } from './model';
 import { clipActions } from './clipActions';
 import { currentClipAction } from './currentClipAction';
 import { viewerRenderLoop } from './viewerRenderLoop';
+import { sider } from './sider';
 
 export default combineReducers({
     viewer,
@@ -11,4 +12,5 @@ export default combineReducers({
     model,
     clipActions,
     currentClipAction,
+    sider,
 });

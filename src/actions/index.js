@@ -11,7 +11,9 @@ import {
     TOGGLE_ORBITCONTROL,
     TOGGLE_STATS,
     TOGGLE_AXES,
-    TOGGLE_BASEMATRIX
+    TOGGLE_GRID,
+    TOGGLE_SIDER,
+    SELECT_WIREFRAME
 } from './actionTypes';
 
 // create a loader for loading GLLF Model
@@ -51,9 +53,9 @@ export function toggleAxes(key) {
     };
 }
 
-export function toggleBaseMatrix(key) {
+export function togglegrid(key) {
     return {
-        type: TOGGLE_BASEMATRIX,
+        type: TOGGLE_GRID,
         payload: key,
     }
 }
@@ -138,4 +140,18 @@ export function controlClipAction(feature) {
        type: CONTROL_CLIPACTION,
        payload: feature,
    } 
+}
+
+export function toggleSider(key) {
+    return {
+        type: TOGGLE_SIDER,
+        payload: key,
+    };
+}
+
+export function selectWireframe(color) {
+    return {
+        type: SELECT_WIREFRAME,
+        payload: color,
+    };
 }

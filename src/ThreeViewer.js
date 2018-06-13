@@ -1,21 +1,45 @@
+import { ClipActionStatus } from './actions/actionTypes';
 import {
-    WebGLRenderer,
+    Box3,
+    Vector3,
+    VertexNormalsHelper,
+    FaceNormalsHelper,
+    SkeletonHelper,
     Scene,
+    BoxGeometry,
+    MeshBasicMaterial,
+    DoubleSide,
+    AnimationObjectGroup
+} from 'three';
+import { cloneGltf, cloneGLTFScene } from './three-clone-gltf';
+
+const THREE = window.THREE = require('three');
+
+const Stats = require('stats.js');
+require('three-orbitcontrols');
+require('three-gltf-loader');
+
+const {
+    WebGLRenderer,
     PerspectiveCamera,
     AxesHelper,
     PlaneGeometry,
     Mesh,
-    MeshBasicMaterial,
+    // MeshBasicMaterial,
     Color,
     DirectionalLight,
     AnimationMixer,
     Clock,
-    SkeletonHelper,
-    HemisphereLight
-} from 'three'; // AmbientLight, // HemisphereLight, // BoxHelper, // SkeletonHelper
-import OrbitControls from 'three-orbitcontrols';
-import Stats from 'stats.js';
-import { ClipActionStatus } from './actions/actionTypes';
+    HemisphereLight,
+    AmbientLight,
+    SceneUtils,
+    Group,
+    Object3D,
+    OrbitControls,
+    sRGBEncoding,
+    LinearEncoding,
+    GridHelper,
+} = THREE;
 
 const DEG = Math.PI / 180;
 
@@ -42,9 +66,13 @@ class ThreeViewer {
         this.camera.lookAt(this.scene.position);
         this.renderer.setClearColor(0xFFFFFF);
         this.renderer.setPixelRatio(window.devicePixelRatio);
+        this.renderer.gammaOutput = true;
+        this.renderer.gammaFactor = 3;
+
         this.adaptWindow();
         // listen resizing of window
         this.resizeListener = window.addEventListener('resize', this.adaptWindow);
+        // this.stats.domElement.style.bottom = '0px';
         this.root.appendChild(this.stats.domElement);
 
         this.primaryLoadClipActions = props.primaryLoadClipActions;
@@ -112,32 +140,29 @@ class ThreeViewer {
         }
     }
 
-    toggleBaseMatrix(key) {
+    togglegrid(key) {
         if (key) {
-            this.baseMatrix.visible = true;
+            this.grid.visible = true;
         } else {
-            this.baseMatrix.visible = false;
+            this.grid.visible = false;
         }
     }
 
     init() {
         // add light
-        const light = new DirectionalLight(0xFFFFFF, 2.5);
-        light.position.set(0, 140, 500);
+        /* const light = new DirectionalLight(0xFFFFFF, 2.5);
+        light.position.set(0, 140, 500); */
+        // light.visible = false;
 
-        const hemispehreLight = new HemisphereLight(0xFFFFFF, 0x444444);
-        this.scene.add(hemispehreLight);
+        /* const hemispehreLight = new HemisphereLight(0xFFFFFF, 0x444444);
+        this.scene.add(hemispehreLight); */
 
-        /* const ambientLight = new AmbientLight(0xFFFFFF);
-        this.scene.add(ambientLight); */
+        const ambientLight = new AmbientLight(0x040404);
+        this.scene.add(ambientLight);
 
-        // base matrix
-        const baseMatrix = new Mesh(new PlaneGeometry(100, 100, 20, 20), new MeshBasicMaterial({
-            color: new Color('skyblue'),
-            wireframe: true,
-        }));
-        baseMatrix.rotateX(90 * DEG);
-        this.scene.add(baseMatrix);
+        // grid
+        const grid = new GridHelper(100, 20, 'black', 'skyblue');
+        this.scene.add(grid);
 
         // more initialization
         // add axes to help observation
@@ -145,32 +170,66 @@ class ThreeViewer {
         this.scene.add(axes);
 
         this.axes = axes;
-        this.baseMatrix = baseMatrix;
-        this.light = light;
+        this.grid = grid;
+        // this.light = light;
 
         this.startRenderLoop();
+        this.toggleStats(false)
     }
 
     handleLoadedGLTF(gltf) {
         let model = gltf.scene;
-        let clips, mixer, actions, skeleton;
+        let group, mirrorModel, clips, mixer, skeleton, actions = [];
 
-        // get animations
-        if (gltf.animations) {
+        // clone model
+        mirrorModel = cloneGLTFScene(model);
+        // adjust position and camera
+        this.adjustView(model);
+        mirrorModel.position.copy(model.position);
+        
+        group = new AnimationObjectGroup();
+        group.add(model);
+        group.add(mirrorModel);
+        
+        if (gltf.animations && gltf.animations.length > 0) {
             clips = gltf.animations;
-            mixer = new AnimationMixer(model);
+            mixer = new AnimationMixer(group);
             actions = clips.map(clip => mixer.clipAction(clip));
-            this.renderAction = function (delta) {
+            // actions
+            this.renderAction = function(delta) {
                 mixer.update(delta);
                 this.viewerRender();
-            };
+            }
             this.primaryLoadClipActions(actions);
         }
-        skeleton = new SkeletonHelper(model);
-        skeleton.visible = false;
-        this.scene.add(skeleton);
-        // modify 
+        mirrorModel.visible = true;
+        model.visible = true;
         this.scene.add(model);
+        this.scene.add(mirrorModel);
+        this.currentModel = model;
+        this.mirrorModel = mirrorModel;
+    }
+
+    adjustView(object) {
+        object.updateMatrixWorld();
+        const boundingBox = new Box3().setFromObject(object);
+        const size = boundingBox.getSize(new Vector3()).length();
+        const center = boundingBox.getCenter(new Vector3());
+
+        // reset orbit
+        object.position.x += object.position.x - center.x;
+        object.position.y += object.position.y - center.y;
+        object.position.z += object.position.z - center.z;
+        this.orbitControls.maxDistance = size * 10;
+        this.camera.position.copy(center);
+        this.camera.position.x += size / 1.0;
+        this.camera.position.y += size / 1.0;
+        this.camera.position.z += size / 1.0;
+        this.camera.near = size / 100;
+        this.camera.far = size * 100;
+        this.camera.updateProjectionMatrix();
+        this.camera.lookAt(center);
+        object.updateMatrixWorld();
     }
 
     updateConfig(prev, next) {
@@ -183,12 +242,13 @@ class ThreeViewer {
         if (prev.axesEnabled !== next.axesEnabled) {
             this.toggleAxes(next.axesEnabled);
         }
-        if (prev.baseMatrixEnabled !== next.baseMatrixEnabled) {
-            this.toggleBaseMatrix(next.baseMatrixEnabled);
+        if (prev.gridEnabled !== next.gridEnabled) {
+            this.togglegrid(next.gridEnabled);
         }
     }
 
     controlAction(prev, next, action) {
+        
         if (prev.status !== next.status) {
             switch (next.status) {
                 case ClipActionStatus.PLAY:
@@ -207,6 +267,34 @@ class ThreeViewer {
                     break;
             }
         }
+    }
+
+    inspectorControl(prev, next) {
+        if (prev.wireframe !== next.wireframe) {
+            if (next.wireframe === 'none') {
+                // this.currentModel.visible = true;
+                this.mirrorModel.visible = false;
+            } else {
+                let color = new Color(next.wireframe);
+                let mat = new MeshBasicMaterial({
+                    wireframe: true,
+                    skinning: true,
+                    color: color,
+                });
+
+                // this.currentModel.visible = false;
+                this.mirrorModel.visible = true;
+                this.mirrorModel.traverse(child => {
+                    if (child.isMesh) {
+                        child.material = mat;
+                    }
+                });
+            }
+        }
+    }
+
+    showWireframe(color) {
+        
     }
 }
 
