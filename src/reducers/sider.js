@@ -16,6 +16,8 @@ export const sider = (state = {
                     ...state,
                     wireframe: action.payload,
                 };
+            } else {
+                return state;
             }
         default:
             return state;

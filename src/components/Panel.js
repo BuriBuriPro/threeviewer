@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 import { Row, Col, Icon } from 'antd';
-import AnimationSelector from '../containers/AnimationSelector';
 import Link from './Link';
+import AnimationSelector from '../containers/AnimationSelector';
 import { ClipActionStatus } from '../actions/actionTypes';
-import DropMenu from './DropMenu';
 import AnimationProgressSlider from '../containers/AnimationProgressSlider';
 import './PanelStyle.css';
 

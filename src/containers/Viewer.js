@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import ThreeViewer from '../ThreeViewer';
+import ThreeViewer from '../lib/ThreeViewer';
 import { connect } from 'react-redux';
 import {
     loadGLTF,

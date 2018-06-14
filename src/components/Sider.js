@@ -2,8 +2,7 @@ import React, { Component } from 'react';
 import { Menu, Switch, Icon } from 'antd';
 import './SiderStyle.css';
 
-const { Item, SubMenu, ItemGroup, Divider } = Menu;
-
+const { Item } = Menu;
 const wireframeColors = ['none', 'black', 'silver', 'red', 'blue', 'green', 'yellow'];
 
 class Sider extends Component {
@@ -23,8 +22,7 @@ class Sider extends Component {
 
     render() {
         const style = {
-            transform: true ? 'translate(0)' : 'translate(-100%)',
-            // transform: this.props.sider.visible ? 'translate(0)' : 'translate(-100%)',
+            transform: this.props.sider.visible ? 'translate(0)' : 'translate(-100%)',
         };
         const wireframeItems = wireframeColors.map(color => {
             let className = ['sider-wireframe-colors'];
@@ -57,12 +55,14 @@ class Sider extends Component {
                 onClick={this.handleClick}
                 selectable={false}
             >
-                <Item key="toggleSwitch">
+                <Item key="toggleSwitch" style={{
+                    height: '20px', lineHeight: '20px'
+                }}>
                     <Icon type="left" /> Model Inspector
                 </Item>
                 <Item key="Wireframe" style={{
                     padding: '5px',
-                    height: '100px',
+                    height: '80px',
                 }}>
                     Wireframe
                     <div>
@@ -82,6 +82,10 @@ class Sider extends Component {
                             style={{
                                 width: '55px',
                             }}
+                            onChange={(e) => {
+                                this.props.toggleGrid(e);
+                            }}
+                            defaultChecked={this.props.viewer.gridEnabled}
                         />
                         <span style={{
                             marginLeft: '8px',
@@ -95,6 +99,10 @@ class Sider extends Component {
                             style={{
                                 width: '55px',
                             }}
+                            onChange={(e) => {
+                                this.props.toggleAxes(e);
+                            }}
+                            defaultChecked={this.props.viewer.axesEnabled}
                         />
                         <span style={{
                             marginLeft: '8px',
@@ -108,6 +116,10 @@ class Sider extends Component {
                             style={{
                                 width: '55px',
                             }}
+                            onChange={(e) => {
+                                this.props.toggleFrame(e);
+                            }}
+                            defaultChecked={this.props.viewer.framer}
                         />
                         <span style={{
                             marginLeft: '8px',

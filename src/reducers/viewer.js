@@ -9,7 +9,7 @@ import {
 export const viewer = (state = {
     inited: false,
     orbitCtrlEnabled: true,
-    statsEnabled: true,
+    statsEnabled: false,
     axesEnabled: true,
     gridEnabled: true,
 }, action) => {

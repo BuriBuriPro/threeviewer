@@ -1,20 +1,7 @@
-import { ClipActionStatus } from './actions/actionTypes';
-import {
-    Box3,
-    Vector3,
-    VertexNormalsHelper,
-    FaceNormalsHelper,
-    SkeletonHelper,
-    Scene,
-    BoxGeometry,
-    MeshBasicMaterial,
-    DoubleSide,
-    AnimationObjectGroup
-} from 'three';
-import { cloneGltf, cloneGLTFScene } from './three-clone-gltf';
+import { ClipActionStatus } from '../actions/actionTypes';
+import { cloneGLTFScene } from './three-clone-gltf';
 
 const THREE = window.THREE = require('three');
-
 const Stats = require('stats.js');
 require('three-orbitcontrols');
 require('three-gltf-loader');
@@ -23,25 +10,18 @@ const {
     WebGLRenderer,
     PerspectiveCamera,
     AxesHelper,
-    PlaneGeometry,
-    Mesh,
-    // MeshBasicMaterial,
     Color,
-    DirectionalLight,
     AnimationMixer,
     Clock,
-    HemisphereLight,
     AmbientLight,
-    SceneUtils,
-    Group,
-    Object3D,
     OrbitControls,
-    sRGBEncoding,
-    LinearEncoding,
     GridHelper,
+    Box3,
+    Vector3,
+    Scene,
+    MeshBasicMaterial,
+    AnimationObjectGroup,
 } = THREE;
-
-const DEG = Math.PI / 180;
 
 class ThreeViewer {
     constructor(props) {
@@ -72,7 +52,9 @@ class ThreeViewer {
         this.adaptWindow();
         // listen resizing of window
         this.resizeListener = window.addEventListener('resize', this.adaptWindow);
-        // this.stats.domElement.style.bottom = '0px';
+        // need to remove left
+        this.stats.domElement.style.left = '';
+        this.stats.domElement.style.right = '0px';
         this.root.appendChild(this.stats.domElement);
 
         this.primaryLoadClipActions = props.primaryLoadClipActions;
@@ -179,7 +161,7 @@ class ThreeViewer {
 
     handleLoadedGLTF(gltf) {
         let model = gltf.scene;
-        let group, mirrorModel, clips, mixer, skeleton, actions = [];
+        let group, mirrorModel, clips, mixer, actions = [];
 
         // clone model
         mirrorModel = cloneGLTFScene(model);
