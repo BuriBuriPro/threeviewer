@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import Sider from '../components/Sider';
+import Sider from '../components/Sider/Sider';
 import { toggleSider, selectWireframe, togglegrid, toggleAxes, togggleStats } from '../actions';
 
 const mapStateToProps = (state) => ({

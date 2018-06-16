@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import ProgressSlider from '../components/ProgressSlider';
+import ProgressSlider from '../components/ProgressSlider/ProgressSlider';
 
 const mapStateToProps = (state) => ({
     clipActions: state.clipActions,

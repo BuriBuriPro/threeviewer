@@ -1,0 +1,22 @@
+.panel {
+    padding: 8px;
+    width: 100vw;
+}
+
+.panel-item {
+    display: inline-block;
+    width: 10vw;
+    height: 50px;
+    min-width: 50px;
+    line-height: 50px; 
+    text-align: center;
+}
+
+.item-setting {
+    float: right;
+    margin: 0 auto;
+} 
+
+.panel-item .btn {
+    width: 80%;
+}

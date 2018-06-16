@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import Selector from '../components/Selector';
+import Selector from '../components/Selector/Selector';
 import { selectClipAction, controlClipAction } from '../actions';
 
 const mapStateToProps = (state, ownProps) => ({

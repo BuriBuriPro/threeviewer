@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import Panel from '../components/Panel';
+import Panel from '../components/Panel/Panel';
 import { controlClipAction, toggleOrbitControl, toggleSider } from '../actions';
 
 const mapStateToProps = (state, ownProps) => ({
