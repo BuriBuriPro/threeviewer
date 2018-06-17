@@ -1,8 +1,12 @@
 import { ClipActionStatus } from '../actions/actionTypes';
 import { cloneGLTFScene } from './three-clone-gltf';
+import createBackground from 'three-vignette-background';
 
 const THREE = window.THREE = require('three');
 const Stats = require('stats.js');
+
+console.log(createBackground);
+
 require('three-orbitcontrols');
 require('three-gltf-loader');
 
@@ -61,6 +65,14 @@ class ThreeViewer {
         this.viewerRender = props.viewerRender;
         this.clock = new Clock();
         this.startRenderLoop();
+
+        // add vignette background
+        const bg = createBackground({
+            aspect: this.camera.aspect,
+            grainScale: 0.001, // mattdesl/three-vignette-background#1
+            colors: ['#ffffff', '#353535'],
+        });
+        this.scene.add(bg);
     }
 
     render() {
@@ -122,7 +134,7 @@ class ThreeViewer {
         }
     }
 
-    togglegrid(key) {
+    toggleGrid(key) {
         if (key) {
             this.grid.visible = true;
         } else {
@@ -156,7 +168,6 @@ class ThreeViewer {
         // this.light = light;
 
         this.startRenderLoop();
-        this.toggleStats(false)
     }
 
     handleLoadedGLTF(gltf) {
@@ -168,17 +179,17 @@ class ThreeViewer {
         // adjust position and camera
         this.adjustView(model);
         mirrorModel.position.copy(model.position);
-        
+
         group = new AnimationObjectGroup();
         group.add(model);
         group.add(mirrorModel);
-        
+
         if (gltf.animations && gltf.animations.length > 0) {
             clips = gltf.animations;
             mixer = new AnimationMixer(group);
             actions = clips.map(clip => mixer.clipAction(clip));
             // actions
-            this.renderAction = function(delta) {
+            this.renderAction = function (delta) {
                 mixer.update(delta);
                 this.viewerRender();
             }
@@ -225,12 +236,12 @@ class ThreeViewer {
             this.toggleAxes(next.axesEnabled);
         }
         if (prev.gridEnabled !== next.gridEnabled) {
-            this.togglegrid(next.gridEnabled);
+            this.toggleGrid(next.gridEnabled);
         }
     }
 
     controlAction(prev, next, action) {
-        
+
         if (prev.status !== next.status) {
             switch (next.status) {
                 case ClipActionStatus.PLAY:
@@ -276,7 +287,7 @@ class ThreeViewer {
     }
 
     showWireframe(color) {
-        
+
     }
 }
 
