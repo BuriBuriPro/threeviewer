@@ -10,8 +10,8 @@ export const viewer = (state = {
     inited: false,
     orbitCtrlEnabled: true,
     statsEnabled: false,
-    axesEnabled: true,
-    gridEnabled: true,
+    axesEnabled: false,
+    gridEnabled: false,
 }, action) => {
     switch (action.type) {
         case INIT_VIEWER:

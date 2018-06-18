@@ -67,12 +67,12 @@ class ThreeViewer {
         this.startRenderLoop();
 
         // add vignette background
-        const bg = createBackground({
+        this.vignetteBg = createBackground({
             aspect: this.camera.aspect,
             grainScale: 0.001, // mattdesl/three-vignette-background#1
             colors: ['#ffffff', '#353535'],
         });
-        this.scene.add(bg);
+        this.scene.add(this.vignetteBg);
     }
 
     render() {
@@ -166,6 +166,10 @@ class ThreeViewer {
         this.axes = axes;
         this.grid = grid;
         // this.light = light;
+
+        this.toggleStats(false);
+        this.toggleGrid(false);
+        this.toggleAxes(false);
 
         this.startRenderLoop();
     }
