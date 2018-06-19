@@ -5,8 +5,6 @@ import createBackground from 'three-vignette-background';
 const THREE = window.THREE = require('three');
 const Stats = require('stats.js');
 
-console.log(createBackground);
-
 require('three-orbitcontrols');
 require('three-gltf-loader');
 
@@ -66,13 +64,13 @@ class ThreeViewer {
         this.clock = new Clock();
         this.startRenderLoop();
 
-        // add vignette background
-        this.vignetteBg = createBackground({
+        // add vignette background 
+        /* this.vignetteBg = createBackground({
             aspect: this.camera.aspect,
             grainScale: 0.001, // mattdesl/three-vignette-background#1
             colors: ['#ffffff', '#353535'],
         });
-        this.scene.add(this.vignetteBg);
+        this.scene.add(this.vignetteBg); */
     }
 
     render() {
