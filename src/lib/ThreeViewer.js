@@ -1,6 +1,6 @@
 import { ClipActionStatus } from '../actions/actionTypes';
 import { cloneGLTFScene } from './three-clone-gltf';
-import createBackground from 'three-vignette-background';
+// import createBackground from 'three-vignette-background';
 
 const THREE = window.THREE = require('three');
 const Stats = require('stats.js');
